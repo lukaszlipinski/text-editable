@@ -1,1 +1,1 @@
-var app = require('./src/app3');
+var app = require('./src/app');

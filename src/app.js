@@ -1,68 +1,37 @@
-import {EditorState} from "prosemirror-state";
-import {EditorView} from "prosemirror-view";
-import {undo, redo, history} from "prosemirror-history";
-import {keymap} from "prosemirror-keymap";
-import {baseKeymap} from "prosemirror-commands";
+import {EditorState} from "prosemirror-state"
+import {EditorView} from "prosemirror-view"
+import {Schema} from "prosemirror-model"
 import {DOMParser} from "prosemirror-model";
 
-import {Schema} from "prosemirror-model"
+import {addListNodes} from "./schema-list";
+import {exampleSetup} from "./example-setup/index";
 
-const schema = new Schema({
-	nodes: {
-		text: {
-			group: "inline"
-		},
-		doc: {
-			content: "block+"
-		},
-		paragraph: {
-			group: "block",
-			content: "inline*",
-			toDOM() {
-				return ["p", {'style': 'color:red;'}, 0]
-			},
-			parseDOM: [{tag: "p"}]
-		},
-		boring_paragraph: {
-			group: "block",
-			content: "text*",
-			marks: "",
-			toDOM() {
-				return ["p", {'class': "boring"}, 0]
-			},
-			parseDOM: [{tag: "p.boring", priority: 60}]
-		}
-	},
-	marks: {
-		shouting: {
-			toDOM() { return ["shouting"] },
-			parseDOM: [{tag: "shouting"}]
-		},
-		link: {
-			attrs: {href: {}},
-			toDOM(node) { return ["a", {href: node.attrs.href}] },
-			parseDOM: [{tag: "a", getAttrs(dom) { return {href: dom.href} }}],
-			inclusive: false
-		}
-	}
-});
+import nodes from 'config/nodes';
+import marks from 'config/marks';
 
-let content = document.getElementById("content");
+// :: Schema
+// This schema rougly corresponds to the document schema used by
+// [CommonMark](http://commonmark.org/), minus the list elements,
+// which are defined in the [`prosemirror-schema-list`](#schema-list)
+// module.
+//
+// To reuse elements from this schema, extend or read from its
+// `spec.nodes` and `spec.marks` [properties](#model.Schema.spec).
+const schema = new Schema({nodes, marks});
 
-let state = EditorState.create({
-	doc: DOMParser.fromSchema(schema).parse(content),
-	plugins: [
-		history(),
-		keymap({"Mod-z": undo, "Mod-y": redo}),
-		keymap(baseKeymap)
-	]
-});
-let view = new EditorView(document.body, {
-	state: state,
-	dispatchTransaction(transaction) {
-		console.log("Document size went from", transaction.before.content.size,
-			"to", transaction.doc.content.size)
-		let newState = view.state.apply(transaction)
-		view.updateState(newState)
-	}
-});
+
+// code{
+// Mix the nodes from prosemirror-schema-list into the basic schema to
+// create a schema with list support.
+    var mySchema = new Schema({
+        nodes: addListNodes(schema.spec.nodes, "paragraph block*", "block"),
+        marks: schema.spec.marks
+    });
+
+    window.view = new EditorView(document.querySelector("#editor"), {
+        state: EditorState.create({
+            doc: DOMParser.fromSchema(mySchema).parse(document.querySelector("#content")),
+            plugins: exampleSetup({schema: mySchema})
+        })
+    });
+// }
