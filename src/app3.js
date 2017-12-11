@@ -5,9 +5,19 @@ import {DOMParser} from "prosemirror-model";
 
 import {addListNodes} from "./schema-list";
 import {exampleSetup} from "./example-setup/index";
-import {schema} from "./schema-basic";
 
+import nodes from 'config/nodes';
+import marks from 'config/marks';
 
+// :: Schema
+// This schema rougly corresponds to the document schema used by
+// [CommonMark](http://commonmark.org/), minus the list elements,
+// which are defined in the [`prosemirror-schema-list`](#schema-list)
+// module.
+//
+// To reuse elements from this schema, extend or read from its
+// `spec.nodes` and `spec.marks` [properties](#model.Schema.spec).
+const schema = new Schema({nodes, marks});
 
 
 // code{

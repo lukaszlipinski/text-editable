@@ -1,6 +1,6 @@
 // :: Object
 // [Specs](#model.NodeSpec) for the nodes defined in this schema.
-export const nodes = {
+const nodes = {
     // :: NodeSpec The top level document node.
     doc: {
         content: "block+"
@@ -97,3 +97,5 @@ export const nodes = {
         toDOM() { return ["br"] }
     }
 };
+
+export default nodes;

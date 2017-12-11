@@ -1,5 +1,5 @@
 // :: Object [Specs](#model.MarkSpec) for the marks in the schema.
-export const marks = {
+const marks = {
     // :: MarkSpec A link. Has `href` and `title` attributes. `title`
     // defaults to the empty string. Rendered and parsed as an `<a>`
     // element.
@@ -40,3 +40,5 @@ export const marks = {
         toDOM() { return ["code"] }
     }
 };
+
+export default marks;
