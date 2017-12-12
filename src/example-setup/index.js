@@ -57,10 +57,15 @@ export function exampleSetup(options) {
     gapCursor()
   ];
   if (options.menuBar !== false)
-    plugins.push(menuBar({floating: options.floatingMenu !== false,
-                          content: options.menuContent || buildMenuItems(options.schema).fullMenu}))
-  if (options.history !== false)
-    plugins.push(history());
+    plugins.push(menuBar({
+        floating: options.floatingMenu !== false,
+        content: options.menuContent || buildMenuItems(options.schema).fullMenu
+    }));
+
+  if (options.history !== false) {
+      plugins.push(history());
+  }
+
 
   return plugins.concat(new Plugin({
     props: {

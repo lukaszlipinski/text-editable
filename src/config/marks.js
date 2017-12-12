@@ -25,7 +25,8 @@ const marks = {
     // :: MarkSpec A strong mark. Rendered as `<strong>`, parse rules
     // also match `<b>` and `font-weight: bold`.
     strong: {
-        parseDOM: [{tag: "strong"},
+        parseDOM: [
+            {tag: "strong"},
             // This works around a Google Docs misbehavior where
             // pasted content will be inexplicably wrapped in `<b>`
             // tags with a font-weight normal.
@@ -38,6 +39,39 @@ const marks = {
     code: {
         parseDOM: [{tag: "code"}],
         toDOM() { return ["code"] }
+    },
+
+    customStyles: {
+        attrs: {
+            style: {
+                default: ''
+            }
+        },
+        parseDOM: [
+            {tag: "span"/*, getAttrs(dom) {
+                return {style: 'lol'}
+            }*/}
+        ],
+        toDOM(node) {
+            console.log("node", node, this);
+            return ["span", {style: 'color:red'}];
+        }
+    },
+    customStyles2: {
+        attrs: {
+            style: {
+                default: ''
+            }
+        },
+        parseDOM: [
+            {tag: "span"/*, getAttrs(dom) {
+                return {style: 'lol'}
+            }*/}
+        ],
+        toDOM(node) {
+            console.log("node", node, this);
+            return ["span", {style: 'font-size:24px'}];
+        }
     }
 };
 

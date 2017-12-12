@@ -102,6 +102,24 @@ const nodes = {
         selectable: false,
         parseDOM: [{tag: "br"}],
         toDOM() { return ["br"] }
+    },
+    custom_styles: {
+        attrs: {
+            style: {default: null}
+        },
+        inline: true,
+        group: "inline",
+        parseDOM: [{tag: "span"}],
+        toDOM() { return ["span"] }
+    },
+    custom_styles2: {
+        attrs: {
+            style: {default: null}
+        },
+        inline: true,
+        group: "inline",
+        parseDOM: [{tag: "span"}],
+        toDOM() { return ["span"] }
     }
 };
 
