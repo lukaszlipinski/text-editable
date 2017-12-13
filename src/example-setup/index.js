@@ -71,5 +71,5 @@ export function exampleSetup(options) {
     props: {
       attributes: {class: "ProseMirror-example-setup-style"}
     }
-  }))
+  }));
 }

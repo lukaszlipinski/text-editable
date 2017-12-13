@@ -103,24 +103,21 @@ const nodes = {
         parseDOM: [{tag: "br"}],
         toDOM() { return ["br"] }
     },
-    custom_styles: {
+    allow_spans_with_style: {
         attrs: {
             style: {default: null}
         },
-        inline: true,
-        group: "inline",
-        parseDOM: [{tag: "span"}],
-        toDOM() { return ["span"] }
+        content: "inline*",
+        group: "block",
+        parseDOM: [{tag: "span", getAttrs(dom) {
+            return {
+                style: dom.getAttribute("style")
+            }
+        }}],
+        toDOM(el) {
+            return ["span", el.attrs, 0];
+        }
     },
-    custom_styles2: {
-        attrs: {
-            style: {default: null}
-        },
-        inline: true,
-        group: "inline",
-        parseDOM: [{tag: "span"}],
-        toDOM() { return ["span"] }
-    }
 };
 
 export default nodes;

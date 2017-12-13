@@ -41,17 +41,31 @@ const marks = {
         toDOM() { return ["code"] }
     },
 
-    customStyles: {
+    /*noStyles: {
         attrs: {
             style: {
                 default: ''
             }
         },
         parseDOM: [
-            {tag: "span"/*, getAttrs(dom) {
-                return {style: 'lol'}
-            }*/}
+            {tag: "span", skip:true, contentElement: function(node) {
+                return node.style !== null;
+            }},
         ],
+        toDOM(node) {
+            return ["span", node.attrs];
+        }
+    },*/
+
+    customStyles: {
+        attrs: {
+            style: {
+                default: ''
+            }
+        },
+        /*parseDOM: [
+            {tag: "span"}
+        ],*/
         toDOM(node) {
             console.log("node", node, this);
             return ["span", {style: 'color:red'}];
@@ -63,11 +77,9 @@ const marks = {
                 default: ''
             }
         },
-        parseDOM: [
-            {tag: "span"/*, getAttrs(dom) {
-                return {style: 'lol'}
-            }*/}
-        ],
+        /*parseDOM: [
+            {tag: "span"}
+        ],*/
         toDOM(node) {
             console.log("node", node, this);
             return ["span", {style: 'font-size:24px'}];

@@ -46,17 +46,22 @@ function cmdItem(cmd, options) {
   let passedOptions = {
     label: options.title,
     run: cmd
-  }
-  for (let prop in options) passedOptions[prop] = options[prop]
-  if ((!options.enable || options.enable === true) && !options.select)
-    passedOptions[options.enable ? "enable" : "select"] = state => cmd(state)
+  };
 
-  return new MenuItem(passedOptions)
+  for (let prop in options) {
+      passedOptions[prop] = options[prop];
+  }
+
+  if ((!options.enable || options.enable === true) && !options.select) {
+      passedOptions[options.enable ? "enable" : "select"] = state => cmd(state);
+  }
+
+  return new MenuItem(passedOptions);
 }
 
 function markActive(state, type) {
-  let {from, $from, to, empty} = state.selection
-  if (empty) return type.isInSet(state.storedMarks || $from.marks())
+  let {from, $from, to, empty} = state.selection;
+  if (empty) return type.isInSet(state.storedMarks || $from.marks());
   else return state.doc.rangeHasMark(from, to, type)
 }
 
@@ -77,7 +82,7 @@ function linkItem(markType) {
     enable(state) { return !state.selection.empty },
     run(state, dispatch, view) {
       if (markActive(state, markType)) {
-        toggleMark(markType)(state, dispatch)
+        toggleMark(markType)(state, dispatch);
         return true
       }
       openPrompt({
@@ -90,8 +95,8 @@ function linkItem(markType) {
           title: new TextField({label: "Title"})
         },
         callback(attrs) {
-          toggleMark(markType, attrs)(view.state, view.dispatch)
-          view.focus()
+          toggleMark(markType, attrs)(view.state, view.dispatch);
+          view.focus();
         }
       })
     }
@@ -99,7 +104,7 @@ function linkItem(markType) {
 }
 
 function wrapListItem(nodeType, options) {
-  return cmdItem(wrapInList(nodeType, options.attrs), options)
+  return cmdItem(wrapInList(nodeType, options.attrs), options);
 }
 
 // :: (Schema) → Object
@@ -227,16 +232,24 @@ export function buildMenuItems(schema) {
     })
   }
 
-  let cut = arr => arr.filter(x => x)
+  let cut = arr => arr.filter(x => x);
+
+  /*let cut = function(arr) {
+      return arr.filter(function(x) {
+        return x;
+      });
+  };*/
+
   r.insertMenu = new Dropdown(cut([r.insertImage, r.insertHorizontalRule]), {label: "Insert"})
   r.typeMenu = new Dropdown(cut([r.makeParagraph, r.makeCodeBlock, r.makeHead1 && new DropdownSubmenu(cut([
     r.makeHead1, r.makeHead2, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6
   ]), {label: "Heading"})]), {label: "Type..."})
 
-  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink, r.toggleCustomStyles, r.toggleCustomStyles2])]
-  r.blockMenu = [cut([r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
-                      liftItem, selectParentNodeItem])]
-  r.fullMenu = r.inlineMenu.concat([[r.insertMenu, r.typeMenu]], [[undoItem, redoItem]], r.blockMenu)
+  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink, r.toggleCustomStyles, r.toggleCustomStyles2])];
+
+  r.blockMenu = [cut([r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem, liftItem, selectParentNodeItem])];
+
+  r.fullMenu = r.inlineMenu.concat([[r.insertMenu, r.typeMenu]], [[undoItem, redoItem]], r.blockMenu);
 
   return r
 }
